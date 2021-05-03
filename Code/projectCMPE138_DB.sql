@@ -1,5 +1,4 @@
-
-	drop database if exists community_center;
+    drop database if exists community_center;
     create database community_center;
     use community_center;
     
@@ -150,4 +149,6 @@
      foreign key(e_name) references Event(e_name),
 	 foreign key(c_id) references Participant(c_id)
     );
+
+    
     
