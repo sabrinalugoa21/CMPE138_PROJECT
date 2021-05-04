@@ -3,7 +3,8 @@ INSERT employee VALUES
 ('234', 'Bob', '444 Rain Rd', 'hisPass'),
 ('392', 'Vero', '355 Burrow Rd', 'verito'),
 ('899', 'Rythor', '277 SJ street', 'ryan82'),
-('589', 'Carther', '4822 Maple Ct', 'canadianSyrup');
+('589', 'Carther', '4822 Maple Ct', 'canadianSyrup'),
+('791', 'Kirby', '333 Tart St', 'imdaman');
 
 INSERT e_shift VALUES 
 ('123', 'MON-TUES (9am-2pm)'),
@@ -11,8 +12,6 @@ INSERT e_shift VALUES
 ('392','THUR-FRI (4PM-10PM)'),
 ('899','MON-FRI (9AM-5pm)'),
 ('589','MON-FRI (9AM-5pm)');
-
-
 
 INSERT gym VALUES
 ('Spartan Gym', 900, 1700),
