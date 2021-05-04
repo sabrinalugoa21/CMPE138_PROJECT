@@ -11,3 +11,13 @@ INSERT manager VALUES
 ('123');
 INSERT janitor VALUES 
 ('234');
+INSERT trainer VALUES 
+('392');
+INSERT cook VALUES 
+('899');
+INSERT event_planner VALUES 
+('589');
+
+INSERT Event VALUES
+('Swim Comp', 1100, 1300, 041821, 589),
+('Powerlifting Meet', 1200, 1500, 042221, 589);
