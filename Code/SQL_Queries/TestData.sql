@@ -1,3 +1,5 @@
+-- SJSU CMPE 138 SPRING 2021 TEAM3
+
 INSERT employee VALUES 
 ('123', 'Alice', '333 Dorsey Lane', 'herPass'),
 ('234', 'Bob', '444 Rain Rd', 'hisPass'),
