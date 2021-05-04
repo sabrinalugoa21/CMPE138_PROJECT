@@ -30,7 +30,15 @@ INSERT community_member VALUES
 ('1332', 'Zeppelin', 'Led_Zeppers'),
 ('7215', 'Grant', 'dmgfjwnfe'),
 ('0202', 'Biesty', 'The-Beast'),
-('1984', 'George', 'animals_rule');
+('1984', 'George', 'animals_rule'),
+('5521', 'Arnold', 'arn11'),
+('5522', 'Brian', 'ian93'),
+('5523', 'Reynold', 'reyspray'),
+('5524', 'Sabrina', 'blacksab'),
+('5525', 'Casey', 'caseydia'),
+('5526', 'Gianine', 'nineteen'),
+('5527', 'Veronica', 'VeritoBurito'),
+('5528', 'Ryan', 'yannay');
 
 INSERT cafeteria VALUES
 ('Spartan Eats', 'Cheese Burger', 'Lunch', 9, 900, 1700);
@@ -38,3 +46,9 @@ INSERT cafeteria VALUES
 INSERT participant VALUES 
 ('6767', 'Spartan Eats'),
 ('9999', 'Spartan Eats');
+
+INSERT volunteer VALUES 
+('8888'),
+('1212'),
+('1332'),
+('7215');
