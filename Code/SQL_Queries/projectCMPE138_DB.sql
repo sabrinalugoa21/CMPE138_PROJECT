@@ -1,3 +1,5 @@
+    -- SJSU CMPE 138 SPRING 2021 TEAM3
+
     drop database if exists community_center;
     create database community_center;
     use community_center;
