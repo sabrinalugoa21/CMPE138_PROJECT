@@ -74,10 +74,16 @@
 	 g_name  varchar(25),
      type    varchar(25),
      time 	 varchar(25),
-     dates   varchar(50),
      primary key(type),
      foreign key(c_id) references Trainer(e_id),
 	 foreign key(g_name) references Gym(g_name)
+	);
+	
+	create table COURSE_DATE (
+	type	varchar(25),
+	c_date 	varchar(25),
+	primary key(type),
+	foreign key(type) references Course(type)
 	);
     
     create table Community_member
