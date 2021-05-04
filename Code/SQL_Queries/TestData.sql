@@ -4,39 +4,44 @@ INSERT employee VALUES
 ('392', 'Vero', '355 Burrow Rd', 'verito'),
 ('899', 'Rythor', '277 SJ street', 'ryan82'),
 ('589', 'Carther', '4822 Maple Ct', 'canadianSyrup'),
-('791', 'Kirby', '333 Tart St', 'imdaman');
+('791', 'Kirby', '333 Tart St', 'imdaman'),
+('115', 'Regen', '121 Rainy St', 'florence');
+
 
 INSERT e_shift VALUES 
 ('123', 'MON-TUES (9am-2pm)'),
 ('234','MON-FRI (2PM-10PM)'),
 ('392','THUR-FRI (4PM-10PM)'),
 ('899','MON-FRI (9AM-5pm)'),
-('589','MON-FRI (9AM-5pm)');
+('589','MON-FRI (9AM-5pm)'),
+('791','MON-FRI (9AM-5pm)'),
+('115','MON-FRI (9AM-5pm)');
+
 
 INSERT gym VALUES
 ('Spartan Gym', 900, 1700),
-('Neon Gym', 2100, 0500);
+('Neon Gym', 900, 1700);
 	
 INSERT manager VALUES 
-('123'), ('791');
+('123');
 
 INSERT janitor VALUES 
-('234'), ('250');
+('234');
 
 INSERT trainer VALUES 
-('392'), ('115'), ('342');
+('392');
 
 INSERT cook VALUES 
-('899'), ('555');
+('899');
 
 INSERT event_planner VALUES 
-('589'), ('386'), ('221');
+('589');
 
 INSERT Event VALUES
 ('Swim Comp', 1100, 1300, 041821, 589),
 ('Powerlifting Meet', 1200, 1500, 042221, 589), 
-('Music Appreciation', 1500, 1900, 042721, 386),
-('Geology Conference', 1000, 1400, 050121, 221);
+('Music Appreciation', 1500, 1900, 042721, 589),
+('Geology Conference', 1000, 1400, 050121, 589);
 
 INSERT community_member VALUES
 ('6767', 'Dorthy', 'dorthy!'),
