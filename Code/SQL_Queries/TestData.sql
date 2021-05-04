@@ -21,3 +21,13 @@ INSERT event_planner VALUES
 INSERT Event VALUES
 ('Swim Comp', 1100, 1300, 041821, 589),
 ('Powerlifting Meet', 1200, 1500, 042221, 589);
+
+INSERT community_member VALUES
+('6767', 'Dorthy', 'dorthy!'),
+('9999', 'Robert', 'psRob'),
+('8888', 'Don', 'tClient'),
+('1212', 'Henly', 'bedless'),
+('1332', 'Zeppelin', 'Led_Zeppers'),
+('7215', 'Grant', 'dmgfjwnfe'),
+('0202', 'Biesty', 'The-Beast'),
+('1984', 'George', 'animals_rule');
