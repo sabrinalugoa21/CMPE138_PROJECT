@@ -12,7 +12,7 @@
 	);
 	
 	create table E_SHIFT (
-	e_id  	carchar(8),
+	e_id  	varchar(8),
 	shift 	varchar(25),
 	primary key (e_id),
 	foreign key (e_id) references employee(e_id)
