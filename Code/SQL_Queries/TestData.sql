@@ -1,5 +1,5 @@
 INSERT employee VALUES 
-('123', 'Alice', '333 Dorsey Lane''herPass'),
+('123', 'Alice', '333 Dorsey Lane', 'herPass'),
 ('234', 'Bob', '444 Rain Rd', 'hisPass'),
 ('392', 'Vero', '355 Burrow Rd', 'verito'),
 ('899', 'Rythor', '277 SJ street', 'ryan82'),
@@ -76,7 +76,7 @@ INSERT course VALUES
  ('392', 'Spartan Gym', 'Yoga', '900'),
  ('392', 'Spartan Gym', 'Powerlifting', '1200'),
  ('392', 'Spartan Gym', 'Beginner Weights', '1100'),
- ('392', 'Spartan Gym', 'Swimming Basics');
+ ('392', 'Spartan Gym', 'Swimming Basics', '1200');
  
  INSERT course_date VALUES 
  ('Yoga', '052121'),
@@ -84,5 +84,4 @@ INSERT course VALUES
  ('Beginner Weights', '063021');
  
 INSERT gym_member VALUES
-('0202', 'Spartan Gym', 'Yoga', '392'),
-('1984', 'Spartan Gym', 'Beginner Weights', '392');
+('0202', 'Spartan Gym', 'Yoga', '392');
