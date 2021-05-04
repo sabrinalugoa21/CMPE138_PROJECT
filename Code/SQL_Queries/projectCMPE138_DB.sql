@@ -6,9 +6,16 @@
 	(e_id		varchar(8) not null,
 	 name		varchar(25),
 	 address	varchar(25),
-     shifts 	varchar(25),
-     password   varchar(50) not null,
+    	 shifts 	varchar(25),
+    	 password   varchar(50) not null,
 	 primary key (e_id)
+	);
+	
+	create table E_SHIFT (
+	e_id  	carchar(8),
+	shift 	varchar(25),
+	primary key (e_id),
+	foreign key (e_id) references employee(e_id)
 	);
 
 	create table manager 
