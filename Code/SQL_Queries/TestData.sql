@@ -1,9 +1,20 @@
 INSERT employee VALUES 
-('123', 'Alice', '333 Dorsey Lane','MON-FRI (9am-2pm)', 'herPass'),
-('234', 'Bob', '444 Rain Rd','MON-FRI (2PM-10PM)', 'hisPass'),
-('392', 'Vero', '355 Burrow Rd','MON-FRI (2PM-10PM)', 'verito'),
-('899', 'Rythor', '277 SJ street','MON-FRI (4PM-10PM)', 'ryan82'),
-('589', 'Carther', '4822 Maple Ct','MON-FRI (9AM-5pm)', 'canadianSyrup');
+('123', 'Alice', '333 Dorsey Lane', 'herPass'),
+('234', 'Bob', '444 Rain Rd', 'hisPass'),
+('392', 'Vero', '355 Burrow Rd', 'verito'),
+('899', 'Rythor', '277 SJ street', 'ryan82'),
+('589', 'Carther', '4822 Maple Ct', 'canadianSyrup');
+
+INSERT e_shift VALUES 
+('123', 'MON-TUES (9am-2pm)'),
+('123', 'WED-FRI (11am-5pm)'),
+('234','MON-FRI (2PM-10PM)'),
+('392','MON-WED (2PM-10PM)'),
+('392','THUR-FRI (4PM-10PM)'),
+('899','MON-FRI (9AM-5pm)'),
+('589','MON-FRI (9AM-5pm)');
+
+
 
 INSERT gym VALUES
 ('Spartan Gym', 900, 1700),
@@ -85,4 +96,3 @@ INSERT course VALUES
 INSERT gym_member VALUES
 ('0202', 'Spartan Gym', 'Yoga', '392'),
 ('1984', 'Spartan Gym', 'Beginner Weights', '392');
-
