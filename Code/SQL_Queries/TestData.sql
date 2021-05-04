@@ -6,26 +6,29 @@ INSERT employee VALUES
 ('589', 'Carther', '4822 Maple Ct','MON-FRI (9AM-5pm)', 'canadianSyrup');
 
 INSERT gym VALUES
-('Spartan Gym', 900, 1700);
+('Spartan Gym', 900, 1700),
+('Neon Gym', 2100, 0500);
 	
 INSERT manager VALUES 
-('123');
+('123'), ('791');
 
 INSERT janitor VALUES 
-('234');
+('234'), ('250');
 
 INSERT trainer VALUES 
-('392');
+('392'), ('115'), ('342');
 
 INSERT cook VALUES 
-('899');
+('899'), ('555');
 
 INSERT event_planner VALUES 
-('589');
+('589'), ('386'), ('221');
 
 INSERT Event VALUES
 ('Swim Comp', 1100, 1300, 041821, 589),
-('Powerlifting Meet', 1200, 1500, 042221, 589);
+('Powerlifting Meet', 1200, 1500, 042221, 589), 
+('Music Appreciation', 1500, 1900, 042721, 386),
+('Geology Conference', 1000, 1400, 050121, 221);
 
 INSERT community_member VALUES
 ('6767', 'Dorthy', 'dorthy!'),
@@ -46,7 +49,15 @@ INSERT community_member VALUES
 ('5528', 'Ryan', 'yannay');
 
 INSERT cafeteria VALUES
-('Spartan Eats', 'Cheese Burger', 'Lunch', 9, 900, 1700);
+('Spartan Eats', 'Cheese Burger', 'Lunch', 9, 900, 1700), 
+('Spartan Eats', 'Breakfast Burrito', 'Breakfast', 20, 900, 1700),
+('Spartan Eats', 'Porridge', 'Breakfast', 15, 900, 1700),
+('Spartan Eats', 'Peanut Butter Sandwich', 'Lunch', 10, 900, 1700),
+('Spartan Eats', 'Fruit Salad', 'Lunch', 15, 900, 1700),
+('Spartan Eats', 'Pasta', 'Dinner', 30, 900, 1700),
+('Neon Eats', 'Milkshake', 'Dessert', 30, 2100, 0500), 
+('Neon Eats', 'Cheese Burger', 'Other', 10, 2100, 0500), 
+('Neon Eats', 'Tomato Soup', 'Other', 30, 2100, 0500);
 
 INSERT participant VALUES 
 ('6767', 'Spartan Eats'),
