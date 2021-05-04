@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <sqlite3.h> 
 #include <stdio.h>
 
@@ -7,6 +8,7 @@ using namespace std;
 
 /**********FUNCTIONS**************/
 int main_menu();
+void Employee_menu();
 void User_menu();
 void Manager_menu();
 void EventPlanner_menu();
@@ -15,6 +17,7 @@ void Cook_menu();
 void login();
 void build_db();
 void fill_db();
+void query();
 /********************************/
 
 /* Open database */
@@ -44,35 +47,10 @@ int main()
 
     //type_of_user = main_menu();
     // login();
+
     main_menu();    
     
-    // username, password = login();
-    // //sql code here that determines if user, employee, or manager
-    // if() //sql code here for user 
-    // {
-
-    // }
-    // else if () // sql code here for manager
-    // {
-
-    // }
-    // else if () //sql code here for event planner
-    // {
-
-    // }
-    // else if () //sql code here for trainer 
-    // {
-
-    // }
-    // else if () //sql code her for cook 
-    // {
-
-    // }
-    // else //sql code for janitor
-    // {
-
-    // }
-
+    // query();
 
     return 0;
 }
@@ -92,27 +70,7 @@ int main_menu()
 
         if(choice == 1)
         {
-            sql = "SELECT * from EMPLOYEE";
-            rc = sqlite3_exec(db, sql, callback, (void*)data, &zErrMsg);
-            if( rc != SQLITE_OK ) {
-                fprintf(stderr, "SQL error: %s\n", zErrMsg);
-                sqlite3_free(zErrMsg);
-            } 
-            else 
-            {
-                fprintf(stdout, "Operation done successfully\n");
-            }
-
-            sql = "SELECT * from e_shift";
-            rc = sqlite3_exec(db, sql, callback, (void*)data, &zErrMsg);
-            if( rc != SQLITE_OK ) {
-                fprintf(stderr, "SQL error: %s\n", zErrMsg);
-                sqlite3_free(zErrMsg);
-            } 
-            else 
-            {
-                fprintf(stdout, "Operation done successfully\n");
-            }
+            Employee_menu();
         }
 
         else if(choice == 2)
@@ -129,18 +87,94 @@ void User_menu()
     int choice  = 0;
     string name; 
 
-    cout << "What do you want to do? " << endl;
-    cout << "(1) View events schedule" << endl;
-    cout << "(2) View Cafeteria schedule" << endl;
-    cout << "(3) View gym courses schedule" << endl; 
-    //cout << "(4) Sign up for a gym membership" << endl;
-    cout << "(5) Quit" << endl;
-    
-    cout << "Enter an option: " << endl;
-    cin >> choice;
-
-    while (choice < 5)
+    while (choice < 4)
     {
+        cout << "What do you want to do? " << endl;
+        cout << "(1) View events schedule" << endl;
+        cout << "(2) View Cafeteria schedule" << endl;
+        cout << "(3) View gym courses schedule" << endl; 
+        cout << "(4) Quit" << endl;
+        //cout << "(5) Sign up for a gym membership" << endl;
+        
+        cout << "Enter an option: " << endl;
+        cin >> choice;
+
+        if (choice == 1)
+        {
+            sql = "SELECT * from event";
+            rc = sqlite3_exec(db, sql, callback, (void*)data, &zErrMsg);
+        }
+        else if (choice == 2)
+        {
+            sql = "SELECT * from cafeteria";
+            rc = sqlite3_exec(db, sql, callback, (void*)data, &zErrMsg);
+        }
+        else if (choice == 3)
+        {
+            sql = "SELECT * from course";
+            rc = sqlite3_exec(db, sql, callback, (void*)data, &zErrMsg);
+        }
+        else 
+        {
+            //php code 
+        }
+
+    }
+
+}
+
+void Employee_menu()
+{
+    int choice  = 0;
+    while(choice < 5)
+    {
+        cout << "Choose from the following: " << endl;
+        cout << "(1) Manager" << endl;
+        cout << "(2) Event Planner" << endl;
+        cout << "(3) Trainer" << endl; 
+        cout << "(4) Cook" << endl; 
+        cout << "(5) Quit" << endl; 
+        
+        cout << "Enter an option: " << endl;
+        cin >> choice;
+
+        if(choice == 1)
+        {
+            Manager_menu();
+        }
+
+        else if(choice == 2)
+        {
+            EventPlanner_menu();
+        }
+
+        else if(choice == 3)
+        {
+            Trainer_menu();
+        }
+
+        else if(choice == 4)
+        {
+            Cook_menu();
+        }
+    }
+}
+
+void Manager_menu()
+{
+    int choice;
+
+    while (choice < 4)
+    {
+        cout << "What do you want to do? " << endl;
+        cout << "(1) Update Schedule" << endl;
+        cout << "(2) Update Employees" << endl;  //add, delete, mod
+        cout << "(3) Update Volunteers" << endl;  //add, delete, mod
+        cout << "(4) Quit" << endl;
+        
+        cout << "Enter an option: " << endl;
+        cin >> choice;
+
         if (choice == 1)
         {
             //php code
@@ -155,62 +189,62 @@ void User_menu()
         }
         else 
         {
-            //php code 
-        }
-
-    }
-
-}
-
-void Manager_menu()
-{
-    int choice;
-    cout << "What do you want to do? " << endl;
-    cout << "(1) Update Schedule" << endl;
-    cout << "(2) Update Employees" << endl;  //add, delete, mod
-    cout << "(3) Update Volunteers" << endl;  //add, delete, mod
-    cout << "(4) Quit" << endl;
-    
-    cout << "Enter an option: " << endl;
-    cin >> choice;
-
-    while (choice < 4)
-    {
-        if (choice == 1)
-        {
             //php code
         }
-        else if (choice == 2)
-        {
-            //php code
-        }
-        else 
-        {
-            //php code
-        }
-
     }    
 }
 
 void EventPlanner_menu()
 {
     int choice;
-    cout << "What do you want to do? " << endl;
-    cout << "(1) Add an Event" << endl;
-    cout << "(2) Delete an Event" << endl;  
-    cout << "(3) Update an Event" << endl;  
-    cout << "(4) Quit" << endl;
-    
-    cout << "Enter an option: " << endl;
-    cin >> choice;
+    string e_name, start_time, end_time, date, e_id;
+    string sql_query;
 
     while (choice < 4)
     {
+        cout << "What do you want to do? " << endl;
+        cout << "(1) Add an Event" << endl;
+        cout << "(2) Delete an Event" << endl;  
+        cout << "(3) Update an Event" << endl;  
+        cout << "(4) Quit" << endl;
+        
+        cout << "Enter an option: " << endl;
+        cin >> choice;
+
         if (choice == 1)
+        {
+            cout << "Enter event name: " << endl;
+            getline(cin, e_name);
+            cout << "Enter event start time: " << endl;
+            getline(cin, start_time);
+            cout << "Enter event end time: " << endl;
+            getline(cin, end_time);
+            cout << "Enter event date: " << endl;
+            getline(cin, date);
+            cout << "Enter event employee id: " << endl;
+            getline(cin, e_id);
+
+            sql_query = "INSERT INTO employee VALUES (" 
+                        + e_name + ", " + start_time + ", " 
+                        + end_time + ", " + date + ", " + e_id + ");";
+            cout << sql_query << endl;
+            sql = const_cast<char*>(sql_query.c_str());
+            rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+           if( rc != SQLITE_OK )
+           {
+              fprintf(stderr, "SQL error: %s\n", zErrMsg);
+              sqlite3_free(zErrMsg);
+           } 
+           else fprintf(stdout, "Table created successfully\n");
+
+           sql = "SELECT * from event";
+        rc = sqlite3_exec(db, sql, callback, (void*)data, &zErrMsg);
+        }
+        else if (choice == 2)
         {
             //php code
         }
-        else if (choice == 2)
+        else if (choice == 3)
         {
             //php code
         }
@@ -225,20 +259,22 @@ void EventPlanner_menu()
 void Trainer_menu()
 {
     int choice;
-    cout << "What do you want to do? " << endl;
-    cout << "(1) Add a course" << endl;
-    cout << "(2) Add a trainee" << endl;  
-    cout << "(3) Delete a course" << endl; 
-    cout << "(4) Delete a trainee" << endl;
-    cout << "(5) Update a course" << endl;
-    cout << "(6) Update a trainee" << endl; 
-    cout << "(7) Quit" << endl;
     
-    cout << "Enter an option: " << endl;
-    cin >> choice;
 
     while (choice < 7)
     {
+        cout << "What do you want to do? " << endl;
+        cout << "(1) Add a course" << endl;
+        cout << "(2) Add a trainee" << endl;  
+        cout << "(3) Delete a course" << endl; 
+        cout << "(4) Delete a trainee" << endl;
+        cout << "(5) Update a course" << endl;
+        cout << "(6) Update a trainee" << endl; 
+        cout << "(7) Quit" << endl;
+        
+        cout << "Enter an option: " << endl;
+        cin >> choice;
+
         if (choice == 1)
         {
             //php code
@@ -259,6 +295,10 @@ void Trainer_menu()
         {
             //php code
         }
+        else if (choice == 6)
+        {
+            //php code
+        }
         else 
         {
             //php code
@@ -269,17 +309,19 @@ void Trainer_menu()
 void Cook_menu()
 {
     int choice;
-    cout << "What do you want to do? " << endl;
-    cout << "(1) Add meals" << endl;
-    cout << "(2) Delete meals" << endl;  
-    cout << "(3) Update meals" << endl; 
-    cout << "(4) Quit" << endl;
     
-    cout << "Enter an option: " << endl;
-    cin >> choice;
 
     while (choice < 7)
     {
+        cout << "What do you want to do? " << endl;
+        cout << "(1) Add meals" << endl;
+        cout << "(2) Delete meals" << endl;  
+        cout << "(3) Update meals" << endl; 
+        cout << "(4) Quit" << endl;
+        
+        cout << "Enter an option: " << endl;
+        cin >> choice;
+
         if (choice == 1)
         {
             //php code
@@ -936,4 +978,18 @@ void fill_db()
       sqlite3_free(zErrMsg);
     } 
    else fprintf(stdout, "Records created successfully\n");
+}
+
+void query()
+{
+    string sql_query;
+    cout << "Enter query: ";
+    getline(cin, sql_query);
+    sql = const_cast<char*>(sql_query.c_str());
+    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+    if( rc != SQLITE_OK ) {
+        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+    sqlite3_free(zErrMsg);
+    } 
+    else fprintf(stdout, "Operation done successfully\n");
 }
