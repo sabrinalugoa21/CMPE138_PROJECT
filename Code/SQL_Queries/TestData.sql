@@ -52,3 +52,14 @@ INSERT volunteer VALUES
 ('1212'),
 ('1332'),
 ('7215');
+
+INSERT worker VALUES 
+('8888'),
+('1212');
+
+INSERT server VALUES 
+('1332', 'Spartan Eats'),
+('7215', 'Spartan Eats');
+
+
+
