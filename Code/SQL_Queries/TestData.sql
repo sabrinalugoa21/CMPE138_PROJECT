@@ -99,7 +99,9 @@ INSERT course VALUES
 ('392', 'Spartan Gym', 'Yoga', '900'),
 ('392', 'Spartan Gym', 'Powerlifting', '1200'),
 ('392', 'Spartan Gym', 'Beginner Weights', '1100'),
-('115', 'Spartan Gym', 'Swimming Basics''),
+('115', 'Spartan Gym', 'Swimming Basics', '1200'),
+('115', 'Neon Gym', 'Advanced Yoga', '1200');
+
 
 INSERT course_date VALUES 
 ('Yoga', '052121'),
@@ -110,4 +112,4 @@ INSERT gym_member VALUES
 ('0202', 'Spartan Gym', 'Yoga', '392'),
 ('1984', 'Spartan Gym', 'Beginner Weights', '392'),
 ('1984', 'Spartan Gym', 'Swimming', '115'),
-('5523', 'Neon Gym', 'Yoga', '342');
+('5523', 'Neon Gym', 'Advanced Yoga', '342');
