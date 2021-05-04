@@ -31,3 +31,6 @@ INSERT community_member VALUES
 ('7215', 'Grant', 'dmgfjwnfe'),
 ('0202', 'Biesty', 'The-Beast'),
 ('1984', 'George', 'animals_rule');
+
+INSERT cafeteria VALUES
+('Spartan Eats', 'Cheese Burger', 'Lunch', 9, 900, 1700);
