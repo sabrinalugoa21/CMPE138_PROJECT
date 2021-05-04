@@ -6,7 +6,6 @@
 	(e_id		varchar(8) not null,
 	 name		varchar(25),
 	 address	varchar(25),
-    	 shifts 	varchar(25),
     	 password   varchar(50) not null,
 	 primary key (e_id)
 	);
