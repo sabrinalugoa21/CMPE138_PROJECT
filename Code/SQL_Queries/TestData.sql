@@ -4,3 +4,6 @@ INSERT employee VALUES
 ('392', 'Vero', '355 Burrow Rd','MON-FRI (2PM-10PM)', 'verito'),
 ('899', 'Rythor', '277 SJ street','MON-FRI (4PM-10PM)', 'ryan82'),
 ('589', 'Carther', '4822 Maple Ct','MON-FRI (9AM-5pm)', 'canadianSyrup');
+
+INSERT gym VALUES
+	('Spartan Gym', 900, 1700);
