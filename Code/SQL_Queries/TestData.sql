@@ -34,3 +34,7 @@ INSERT community_member VALUES
 
 INSERT cafeteria VALUES
 ('Spartan Eats', 'Cheese Burger', 'Lunch', 9, 900, 1700);
+
+INSERT participant VALUES 
+('6767', 'Spartan Eats'),
+('9999', 'Spartan Eats');
