@@ -61,5 +61,9 @@ INSERT server VALUES
 ('1332', 'Spartan Eats'),
 ('7215', 'Spartan Eats');
 
+INSERT course VALUES 
+('392', 'Spartan Gym', 'Yoga', '900', '052121'),
+('392', 'Spartan Gym', 'Powerlifting', '1200', '052721'),
+('392', 'Spartan Gym', 'Beginner Weights', '1100', '060421');
 
 
