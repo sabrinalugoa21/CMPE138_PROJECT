@@ -72,27 +72,40 @@ INSERT cafeteria VALUES
 
 INSERT participant VALUES 
 ('6767', 'Spartan Eats'),
-('9999', 'Spartan Eats');
+('9999', 'Spartan Eats'),
+('0202', 'Spartan Eats'),
+('1212', 'Neon Eats'),
+('5523' 'Neon Eats');
 
 INSERT volunteer VALUES 
 ('8888'),
 ('1212'),
 ('1332'),
-('7215');
+('7215'),
+('5522'),
+('9999'),
+('5526');
 
 INSERT worker VALUES 
 ('8888'),
-('1212');
+('1212'),
+('5526'),
+('9999');
 
 INSERT server VALUES 
 ('1332', 'Spartan Eats'),
-('7215', 'Spartan Eats');
+('7215', 'Spartan Eats'),
+('5522', 'Neon Eats');
 
 INSERT course VALUES 
 ('392', 'Spartan Gym', 'Yoga', '900', '052121'),
 ('392', 'Spartan Gym', 'Powerlifting', '1200', '052721'),
-('392', 'Spartan Gym', 'Beginner Weights', '1100', '060421');
+('392', 'Spartan Gym', 'Beginner Weights', '1100', '060421'),
+('115', 'Spartan Gym', 'Swimming Basics', '052321'),
+('342', 'Neon Gym', 'Yoga', '060121');
 
 INSERT gym_member VALUES
 ('0202', 'Spartan Gym', 'Yoga', '392'),
-('1984', 'Spartan Gym', 'Beginner Weights', '392');
+('1984', 'Spartan Gym', 'Beginner Weights', '392'),
+('1984', 'Spartan Gym', 'Swimming', '115'),
+('5523', 'Neon Gym', 'Yoga', '342');
