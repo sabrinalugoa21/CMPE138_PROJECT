@@ -1,3 +1,9 @@
+/*
+   To run:
+   $ gcc TestInterface.cpp -l sqlite3
+   $ ./a.out
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sqlite3.h> 
@@ -64,7 +70,7 @@ int main(int argc, char* argv[]) {
    //       "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)" \
    //       "VALUES (4, 'Mark', 25, 'Rich-Mond ', 65000.00 );";
 
-   sql = "INSERT INTO EMPLOYEE VALUES (1, Joe, 123_Alice_Way, password);";
+   sql = "INSERT INTO EMPLOYEE VALUES ('1', 'Joe', '123 Alice Way', 'password');";
 
    /* Execute SQL statement */
    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
@@ -91,7 +97,7 @@ int main(int argc, char* argv[]) {
    }
 
    /* Create merged SQL statement */
-   sql = "UPDATE EMPLOYEE set password = 1234 where ID=1; " \
+   sql = "UPDATE EMPLOYEE set password = 1234 where e_id=1; " \
          "SELECT * from EMPLOYEE";
 
    /* Execute SQL statement */
@@ -105,7 +111,7 @@ int main(int argc, char* argv[]) {
    }
 
    /* Create merged SQL statement */
-   sql = "DELETE from EMPLOYEE where ID=1; " \
+   sql = "DELETE from EMPLOYEE where e_id=1; " \
          "SELECT * from EMPLOYEE";
 
    /* Execute SQL statement */
