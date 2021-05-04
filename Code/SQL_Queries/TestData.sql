@@ -7,9 +7,7 @@ INSERT employee VALUES
 
 INSERT e_shift VALUES 
 ('123', 'MON-TUES (9am-2pm)'),
-('123', 'WED-FRI (11am-5pm)'),
 ('234','MON-FRI (2PM-10PM)'),
-('392','MON-WED (2PM-10PM)'),
 ('392','THUR-FRI (4PM-10PM)'),
 ('899','MON-FRI (9AM-5pm)'),
 ('589','MON-FRI (9AM-5pm)');
@@ -98,11 +96,15 @@ INSERT server VALUES
 ('5522', 'Neon Eats');
 
 INSERT course VALUES 
-('392', 'Spartan Gym', 'Yoga', '900', '052121'),
-('392', 'Spartan Gym', 'Powerlifting', '1200', '052721'),
-('392', 'Spartan Gym', 'Beginner Weights', '1100', '060421'),
-('115', 'Spartan Gym', 'Swimming Basics', '052321'),
-('342', 'Neon Gym', 'Yoga', '060121');
+('392', 'Spartan Gym', 'Yoga', '900'),
+('392', 'Spartan Gym', 'Powerlifting', '1200'),
+('392', 'Spartan Gym', 'Beginner Weights', '1100'),
+('115', 'Spartan Gym', 'Swimming Basics''),
+
+INSERT course_date VALUES 
+('Yoga', '052121'),
+('Powerlifting', '062721'),
+('Beginner Weights', '063021');
 
 INSERT gym_member VALUES
 ('0202', 'Spartan Gym', 'Yoga', '392'),
