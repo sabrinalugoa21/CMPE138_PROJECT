@@ -66,4 +66,7 @@ INSERT course VALUES
 ('392', 'Spartan Gym', 'Powerlifting', '1200', '052721'),
 ('392', 'Spartan Gym', 'Beginner Weights', '1100', '060421');
 
+INSERT gym_member VALUES
+('0202', 'Spartan Gym', 'Yoga', '392'),
+('1984', 'Spartan Gym', 'Beginner Weights', '392');
 
