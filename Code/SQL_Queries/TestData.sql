@@ -6,15 +6,20 @@ INSERT employee VALUES
 ('589', 'Carther', '4822 Maple Ct','MON-FRI (9AM-5pm)', 'canadianSyrup');
 
 INSERT gym VALUES
-	('Spartan Gym', 900, 1700);
+('Spartan Gym', 900, 1700);
+	
 INSERT manager VALUES 
 ('123');
+
 INSERT janitor VALUES 
 ('234');
+
 INSERT trainer VALUES 
 ('392');
+
 INSERT cook VALUES 
 ('899');
+
 INSERT event_planner VALUES 
 ('589');
 
