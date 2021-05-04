@@ -7,3 +7,7 @@ INSERT employee VALUES
 
 INSERT gym VALUES
 	('Spartan Gym', 900, 1700);
+INSERT manager VALUES 
+('123');
+INSERT janitor VALUES 
+('234');
