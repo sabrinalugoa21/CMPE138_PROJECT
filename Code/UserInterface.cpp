@@ -49,7 +49,7 @@ int main()
 
     main_menu();    
     
-    // query();
+    query();
 
     return 0;
 }
@@ -459,7 +459,24 @@ void Cook_menu()
         }
         else if (choice == 2)
         {
-            //php code
+            sql = "SELECT m_name from cafeteria";
+    	   	rc = sqlite3_exec(db, sql, callback_print, (void*)data, &zErrMsg);
+
+    	   	cout << "Enter meal to delete: ";
+    	   	getline(cin >> std::ws, m_name);
+
+    	   	sql_query = "DELETE from cafeteria where m_name = '" + m_name + "';";
+    	   	sql = const_cast<char*>(sql_query.c_str());
+			rc = sqlite3_exec(db, sql, callback_hash, 0, &zErrMsg);
+			if( rc != SQLITE_OK )
+           {
+              fprintf(stderr, "SQL error: %s\n", zErrMsg);
+              sqlite3_free(zErrMsg);
+           } 
+           else fprintf(stdout, "Meal Deleted\n");
+
+			sql = "SELECT * from cafeteria";
+    	   	rc = sqlite3_exec(db, sql, callback_print, (void*)data, &zErrMsg);
         }
         else if (choice == 3)
         {
@@ -1101,7 +1118,7 @@ void query()
 {
     string sql_query;
     cout << "Enter query: ";
-    getline(cin, sql_query);
+    getline(cin >> std::ws, sql_query);
     sql = const_cast<char*>(sql_query.c_str());
     rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
     if( rc != SQLITE_OK ) {
