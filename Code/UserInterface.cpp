@@ -1,3 +1,6 @@
+//  g++ UserInterface.cpp -l sqlite3  
+//  ./a.out
+
 #include <iostream>
 #include <string>
 #include <cstring>
@@ -14,10 +17,14 @@ void Manager_menu();
 void EventPlanner_menu();
 void Trainer_menu();
 void Cook_menu();
-void login();
 void build_db();
 void fill_db();
 void query();
+int callback_print(void *NotUsed, int argc, char **argv, char **azColName);
+int callback_hash(void *NotUsed, int argc, char **argv, char **azColName);
+string hash_pwd(string plain_text);
+bool login();
+void hash_pwd_db();
 /********************************/
 
 /* Open database */
@@ -25,16 +32,8 @@ sqlite3 *db;
 char *zErrMsg = 0;
 char *sql;
 int rc = sqlite3_open("Community_Center.db", &db);
-const char* data = "Callback function called";
-
-static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
-   int i;
-   for(i = 0; i<argc; i++) {
-      printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
-   }
-   printf("\n");
-   return 0;
-}
+const char* data = "callback_print function called";
+string passwd;
 
 int main()
 {
@@ -70,12 +69,25 @@ int main_menu()
 
         if(choice == 1)
         {
-            Employee_menu();
+            if(login())
+            	Employee_menu();
+            else
+            {
+            	cout << "Incorrent Credentials." << endl;
+            	cout << "Returning to menu."<< endl;
+            }
+            
         }
 
         else if(choice == 2)
         {
-            User_menu();
+            if(login())
+            	User_menu();
+            else
+            {
+            	cout << "Incorrent Credentials." << endl;
+            	cout << "Returning to menu."<< endl;
+            }
         }
     }
     return choice;
@@ -102,17 +114,17 @@ void User_menu()
         if (choice == 1)
         {
             sql = "SELECT * from event";
-            rc = sqlite3_exec(db, sql, callback, (void*)data, &zErrMsg);
+            rc = sqlite3_exec(db, sql, callback_print, (void*)data, &zErrMsg);
         }
         else if (choice == 2)
         {
             sql = "SELECT * from cafeteria";
-            rc = sqlite3_exec(db, sql, callback, (void*)data, &zErrMsg);
+            rc = sqlite3_exec(db, sql, callback_print, (void*)data, &zErrMsg);
         }
         else if (choice == 3)
         {
             sql = "SELECT * from course";
-            rc = sqlite3_exec(db, sql, callback, (void*)data, &zErrMsg);
+            rc = sqlite3_exec(db, sql, callback_print, (void*)data, &zErrMsg);
         }
         else 
         {
@@ -213,36 +225,53 @@ void EventPlanner_menu()
 
         if (choice == 1)
         {
-            cout << "Enter event name: " << endl;
-            getline(cin, e_name);
-            cout << "Enter event start time: " << endl;
+            cout << "Enter event name: ";
+            getline(cin >> std::ws, e_name);
+            cout << "Enter event start time: ";
             getline(cin, start_time);
-            cout << "Enter event end time: " << endl;
+            cout << "Enter event end time: ";
             getline(cin, end_time);
-            cout << "Enter event date: " << endl;
+            cout << "Enter event date: ";
             getline(cin, date);
-            cout << "Enter event employee id: " << endl;
+            cout << "Enter event employee id: ";
             getline(cin, e_id);
 
-            sql_query = "INSERT INTO employee VALUES (" 
-                        + e_name + ", " + start_time + ", " 
+            sql_query = "INSERT INTO Event VALUES ('" 
+                        + e_name + "', " + start_time + ", " 
                         + end_time + ", " + date + ", " + e_id + ");";
             cout << sql_query << endl;
             sql = const_cast<char*>(sql_query.c_str());
-            rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+            rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
            if( rc != SQLITE_OK )
            {
               fprintf(stderr, "SQL error: %s\n", zErrMsg);
               sqlite3_free(zErrMsg);
            } 
-           else fprintf(stdout, "Table created successfully\n");
+           else fprintf(stdout, "Event Created\n");
 
            sql = "SELECT * from event";
-        rc = sqlite3_exec(db, sql, callback, (void*)data, &zErrMsg);
+    	   rc = sqlite3_exec(db, sql, callback_print, (void*)data, &zErrMsg);
         }
         else if (choice == 2)
         {
-            //php code
+            sql = "SELECT e_name from event";
+    	   	rc = sqlite3_exec(db, sql, callback_print, (void*)data, &zErrMsg);
+
+    	   	cout << "Enter event to delete: ";
+    	   	getline(cin >> std::ws, e_name);
+
+    	   	sql_query = "DELETE from event where e_name = '" + e_name + "';";
+    	   	sql = const_cast<char*>(sql_query.c_str());
+			rc = sqlite3_exec(db, sql, callback_hash, 0, &zErrMsg);
+			if( rc != SQLITE_OK )
+           {
+              fprintf(stderr, "SQL error: %s\n", zErrMsg);
+              sqlite3_free(zErrMsg);
+           } 
+           else fprintf(stdout, "Event Deleted\n");
+
+			sql = "SELECT * from event";
+    	   	rc = sqlite3_exec(db, sql, callback_print, (void*)data, &zErrMsg);
         }
         else if (choice == 3)
         {
@@ -259,7 +288,8 @@ void EventPlanner_menu()
 void Trainer_menu()
 {
     int choice;
-    
+    string e_id, c_id, g_name, type, date, time;
+    string sql_query;
 
     while (choice < 7)
     {
@@ -277,19 +307,91 @@ void Trainer_menu()
 
         if (choice == 1)
         {
-            //php code
+            cout << "Enter course id: ";
+            getline(cin >> std::ws, c_id);
+            cout << "Enter gym name: ";
+            getline(cin, g_name);
+            cout << "Enter course type: ";
+            getline(cin, type);
+            cout << "Enter course time: ";
+            getline(cin, time);
+
+            sql_query = "INSERT INTO course VALUES ('" 
+                        + c_id + "', " + "'" + g_name +  "', " 
+                        + "'" + type + "', " + time + ");";
+            cout << sql_query << endl;
+            sql = const_cast<char*>(sql_query.c_str());
+            rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
+           if( rc != SQLITE_OK )
+           {
+              fprintf(stderr, "SQL error: %s\n", zErrMsg);
+              sqlite3_free(zErrMsg);
+           } 
+           else fprintf(stdout, "Course Created\n");
+
+           sql = "SELECT * from course";
+    	   rc = sqlite3_exec(db, sql, callback_print, (void*)data, &zErrMsg);
         }
         else if (choice == 2)
         {
-            //php code
+            cout << "Enter trainer employee id: ";
+            getline(cin >> std::ws, e_id);
+
+            sql_query = "INSERT INTO trainer VALUES (" + e_id + ");";
+            cout << sql_query << endl;
+            sql = const_cast<char*>(sql_query.c_str());
+            rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
+           if( rc != SQLITE_OK )
+           {
+              fprintf(stderr, "SQL error: %s\n", zErrMsg);
+              sqlite3_free(zErrMsg);
+           } 
+           else fprintf(stdout, "Trainer Added\n");
+
+           sql = "SELECT * from trainer";
+    	   rc = sqlite3_exec(db, sql, callback_print, (void*)data, &zErrMsg);
         }
         else if (choice == 3)
         {
-            //php code
+            sql = "SELECT type from course";
+    	   	rc = sqlite3_exec(db, sql, callback_print, (void*)data, &zErrMsg);
+
+    	   	cout << "Enter course to delete: ";
+    	   	getline(cin >> std::ws, type);
+
+    	   	sql_query = "DELETE from course where type = '" + type + "';";
+    	   	sql = const_cast<char*>(sql_query.c_str());
+			rc = sqlite3_exec(db, sql, callback_hash, 0, &zErrMsg);
+			if( rc != SQLITE_OK )
+           {
+              fprintf(stderr, "SQL error: %s\n", zErrMsg);
+              sqlite3_free(zErrMsg);
+           } 
+           else fprintf(stdout, "Course Deleted\n");
+
+			sql = "SELECT * from course";
+    	   	rc = sqlite3_exec(db, sql, callback_print, (void*)data, &zErrMsg);
         }
         else if (choice == 4)
         {
-            //php code
+            sql = "SELECT e_id from trainer";
+    	   	rc = sqlite3_exec(db, sql, callback_print, (void*)data, &zErrMsg);
+
+    	   	cout << "Enter trainer to delete: ";
+    	   	getline(cin >> std::ws, e_id);
+
+    	   	sql_query = "DELETE from trainer where e_id = '" + e_id + "';";
+    	   	sql = const_cast<char*>(sql_query.c_str());
+			rc = sqlite3_exec(db, sql, callback_hash, 0, &zErrMsg);
+			if( rc != SQLITE_OK )
+           {
+              fprintf(stderr, "SQL error: %s\n", zErrMsg);
+              sqlite3_free(zErrMsg);
+           } 
+           else fprintf(stdout, "Trainer Deleted\n");
+
+			sql = "SELECT * from trainer";
+    	   	rc = sqlite3_exec(db, sql, callback_print, (void*)data, &zErrMsg);
         }
         else if (choice == 5)
         {
@@ -309,9 +411,10 @@ void Trainer_menu()
 void Cook_menu()
 {
     int choice;
-    
+    string c_name, m_name, type, amount, opening_time, closing_time;
+    string sql_query;
 
-    while (choice < 7)
+    while (choice < 4)
     {
         cout << "What do you want to do? " << endl;
         cout << "(1) Add meals" << endl;
@@ -324,7 +427,35 @@ void Cook_menu()
 
         if (choice == 1)
         {
-            //php code
+            cout << "Enter cafeteria name: ";
+            getline(cin >> std::ws, c_name);
+            cout << "Enter meal name: ";
+            getline(cin, m_name);
+            cout << "Enter meal type: ";
+            getline(cin, type);
+            cout << "Enter number of meals: ";
+            getline(cin, amount);
+            cout << "Enter cafeteria opening time: ";
+            getline(cin, opening_time);
+            cout << "Enter cafeteria closing time: ";
+            getline(cin, closing_time);
+
+            sql_query = "INSERT INTO cafeteria VALUES ('" 
+                        + c_name + "', " + "'" + m_name +  "', " 
+                        + "'" + type + "', " + amount + ", "
+                        + opening_time + ", " + closing_time + ");";
+            cout << sql_query << endl;
+            sql = const_cast<char*>(sql_query.c_str());
+            rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
+           if( rc != SQLITE_OK )
+           {
+              fprintf(stderr, "SQL error: %s\n", zErrMsg);
+              sqlite3_free(zErrMsg);
+           } 
+           else fprintf(stdout, "Meal Created\n");
+
+           sql = "SELECT * from cafeteria";
+    	   rc = sqlite3_exec(db, sql, callback_print, (void*)data, &zErrMsg);
         }
         else if (choice == 2)
         {
@@ -342,20 +473,6 @@ void Cook_menu()
     }
 }
 
-void login()
-{
-    string username;
-    string password; 
-
-    cout << "Username: ";
-    cin >> username;
-    cout << endl;
-
-    cout << "Password: ";
-    cin >> password;
-    cout << endl;
-}
-
 void build_db()
 {
     /*EMPLOYEE*/
@@ -367,7 +484,7 @@ void build_db()
                 primary key (e_id) ); \
             """
             ; 
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
    
    if( rc != SQLITE_OK )
    {
@@ -384,7 +501,7 @@ void build_db()
                 foreign key (e_id) references employee(e_id) ); \
             """ 
             ;
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
    if( rc != SQLITE_OK )
    {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -399,7 +516,7 @@ void build_db()
                 foreign key (e_id) references employee(e_id) ); \
             """
             ;
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
    if( rc != SQLITE_OK )
    {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -415,7 +532,7 @@ void build_db()
                 ); \
             """ 
             ;
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
    if( rc != SQLITE_OK )
    {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -431,7 +548,7 @@ void build_db()
                 ); \
             """ 
             ;
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
    if( rc != SQLITE_OK )
    {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -447,7 +564,7 @@ void build_db()
                 ); \
             """ 
             ;
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
    if( rc != SQLITE_OK )
    {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -463,7 +580,7 @@ void build_db()
                 ); \
             """ 
             ;
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
    if( rc != SQLITE_OK )
    {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -483,7 +600,7 @@ void build_db()
                 ); \
             """ 
             ;
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
    if( rc != SQLITE_OK )
    {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -503,7 +620,7 @@ void build_db()
                 ); \
             """ 
             ;
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
    if( rc != SQLITE_OK )
    {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -520,7 +637,7 @@ void build_db()
                 ); \
             """ 
             ;
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
    if( rc != SQLITE_OK )
    {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -540,7 +657,7 @@ void build_db()
                 ); \
             """ 
             ;
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
    if( rc != SQLITE_OK )
    {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -557,7 +674,7 @@ void build_db()
                 ); \
             """ 
             ;
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
    if( rc != SQLITE_OK )
    {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -574,7 +691,7 @@ void build_db()
                 ); \
             """ 
             ;
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
    if( rc != SQLITE_OK )
    {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -596,7 +713,7 @@ void build_db()
                 ); \
             """ 
             ;
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
    if( rc != SQLITE_OK )
    {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -614,7 +731,7 @@ void build_db()
                 ); \
             """ 
             ;
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
    if( rc != SQLITE_OK )
    {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -630,7 +747,7 @@ void build_db()
                 ); \
             """ 
             ;
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
    if( rc != SQLITE_OK )
    {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -648,7 +765,7 @@ void build_db()
                 ); \
             """ 
             ;
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
    if( rc != SQLITE_OK )
    {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -663,7 +780,7 @@ void build_db()
                 ); \
             """ 
             ;
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
    if( rc != SQLITE_OK )
    {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -681,7 +798,7 @@ void build_db()
                 ); \
             """ 
             ;
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
    if( rc != SQLITE_OK )
    {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -699,7 +816,7 @@ void build_db()
                 ); \
             """ 
             ;
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
    if( rc != SQLITE_OK )
    {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -717,7 +834,7 @@ void build_db()
                 ); \
             """ 
             ;
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
    if( rc != SQLITE_OK )
    {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -736,7 +853,7 @@ void fill_db()
                                             ('589', 'Carther', '4822 Maple Ct', 'canadianSyrup'); \
           """
           ;
-    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+    rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
     if( rc != SQLITE_OK ) 
     {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -752,7 +869,7 @@ void fill_db()
                                             ('589','MON-FRI (9AM-5pm)'); \
           """
           ;
-    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+    rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
     if( rc != SQLITE_OK ) 
     {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -764,7 +881,7 @@ void fill_db()
     sql = """   INSERT INTO gym VALUES  ('Spartan Gym', 900, 1700); \
           """
           ;
-    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+    rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
     if( rc != SQLITE_OK ) 
     {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -776,7 +893,7 @@ void fill_db()
     sql = """   INSERT INTO manager VALUES  ('123'); \
           """
           ;
-    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+    rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
     if( rc != SQLITE_OK ) 
     {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -788,7 +905,7 @@ void fill_db()
     sql = """   INSERT INTO janitor VALUES  ('234'); \
           """
           ;
-    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+    rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
     if( rc != SQLITE_OK ) 
     {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -800,7 +917,7 @@ void fill_db()
     sql = """   INSERT INTO trainer VALUES  ('392'); \
           """
           ;
-    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+    rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
     if( rc != SQLITE_OK ) 
     {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -812,7 +929,7 @@ void fill_db()
     sql = """   INSERT INTO cook VALUES ('899'); \
           """
           ;
-    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+    rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
     if( rc != SQLITE_OK ) 
     {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -824,7 +941,7 @@ void fill_db()
     sql = """   INSERT INTO event_planner VALUES ('589'); \
           """
           ;
-    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+    rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
     if( rc != SQLITE_OK ) 
     {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -837,7 +954,7 @@ void fill_db()
                                             ('Powerlifting Meet', 1200, 1500, 042221, 589); \
           """
           ;
-    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+    rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
     if( rc != SQLITE_OK ) 
     {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -864,7 +981,7 @@ void fill_db()
                                                     ('5528', 'Ryan', 'yannay'); \
           """
           ;
-    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+    rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
     if( rc != SQLITE_OK ) 
     {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -876,7 +993,7 @@ void fill_db()
     sql = """   INSERT INTO cafeteria VALUES ('Spartan Eats', 'Cheese Burger', 'Lunch', 9, 900, 1700); \
           """
           ;
-    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+    rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
     if( rc != SQLITE_OK ) 
     {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -889,7 +1006,7 @@ void fill_db()
                                                 ('9999', 'Spartan Eats'); \
           """
           ;
-    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+    rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
     if( rc != SQLITE_OK ) 
     {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -904,7 +1021,7 @@ void fill_db()
                                                 ('7215'); \
           """
           ;
-    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+    rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
     if( rc != SQLITE_OK ) 
     {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -917,7 +1034,7 @@ void fill_db()
                                             ('1212'); \
           """
           ;
-    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+    rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
     if( rc != SQLITE_OK ) 
     {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -930,7 +1047,7 @@ void fill_db()
                                             ('7215', 'Spartan Eats'); \
           """
           ;
-    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+    rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
     if( rc != SQLITE_OK ) 
     {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -945,7 +1062,7 @@ void fill_db()
                                             ('392', 'Spartan Gym', 'Swimming Basics', '1200'); \
           """
           ;
-    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+    rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
     if( rc != SQLITE_OK ) 
     {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -959,7 +1076,7 @@ void fill_db()
                                                 ('Beginner Weights', '063021'); \
           """
           ;
-    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+    rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
     if( rc != SQLITE_OK ) 
     {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -971,7 +1088,7 @@ void fill_db()
     sql = """   INSERT INTO gym_member VALUES   ('0202', 'Spartan Gym', 'Yoga', '392'); \
           """
           ;
-    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+    rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
     if( rc != SQLITE_OK ) 
     {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -986,10 +1103,61 @@ void query()
     cout << "Enter query: ";
     getline(cin, sql_query);
     sql = const_cast<char*>(sql_query.c_str());
-    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+    rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
     if( rc != SQLITE_OK ) {
         fprintf(stderr, "SQL error: %s\n", zErrMsg);
     sqlite3_free(zErrMsg);
     } 
     else fprintf(stdout, "Operation done successfully\n");
+}
+
+int callback_print(void *NotUsed, int argc, char **argv, char **azColName) {
+   int i;
+   for(i = 0; i<argc; i++) {
+      printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+   }
+   printf("\n");
+   return 0;
+}
+
+int callback_hash(void *NotUsed, int argc, char **argv, char **azColName) 
+{
+   passwd = (string)argv[0];
+   return 0;
+}
+
+string hash_pwd(string plain_text)
+{
+	char key[] = "wRwrDOsBbao6gky58JABgNZn0v2eGhVkKWNzMsjHv1A2usIDlfevCTQvAvCU0ZTFEIFIwuOj8EwDFEPxLCMRuzhgiLJjOU8";
+	char password[32];
+	for(int x = 0; x < sizeof(string); x++)
+	{
+		password[x] = plain_text[x] ^ key[x];
+		printf("%c", password[x]);
+	}
+	return password;
+}
+
+bool login()
+{
+    string username;
+    string password; 
+    string temp;
+
+    cout << "Username: ";
+    cin >> username;
+    cout << endl;
+
+    cout << "Password: ";
+    cin >> password;
+    temp = "SELECT password from Employee where e_id = " + username;
+    sql = const_cast<char*>(temp.c_str());
+    rc = sqlite3_exec(db, sql, callback_hash, 0, &zErrMsg);
+
+    // password = hash_pwd(password);
+
+    if(password.compare(passwd))
+    	return true;
+    else
+    	return false;
 }
